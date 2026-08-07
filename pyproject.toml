@@ -1,0 +1,39 @@
+[project]
+name = "oarepo-previewer"
+version = "0.1.0"
+description = "OARepo contrib previewers for invenio-previewer (custom file extensions)."
+readme = "README.md"
+requires-python = ">=3.13,<3.15"
+dependencies = [
+    "invenio-previewer>=3.5.1,<4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/oarepo/oarepo-previewer"
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+]
+tests = [
+    "pytest>=7.1.2",
+]
+oarepo14 = [
+    "oarepo[rdm,tests]>=14.0.0,<15.0.0",
+]
+
+[project.entry-points."invenio_base.apps"]
+oarepo_previewer = "oarepo_previewer.ext:OARepoPreviewerExt"
+
+# Register contrib previewers here, e.g.:
+# [project.entry-points."invenio_previewer.previewers"]
+# yaml_prismjs = "oarepo_previewer.previewers.yaml"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/oarepo_previewer",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
