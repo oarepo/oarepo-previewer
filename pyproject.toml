@@ -25,9 +25,8 @@ oarepo14 = [
 [project.entry-points."invenio_base.apps"]
 oarepo_previewer = "oarepo_previewer.ext:OARepoPreviewerExt"
 
-# Register contrib previewers here, e.g.:
-# [project.entry-points."invenio_previewer.previewers"]
-# yaml_prismjs = "oarepo_previewer.previewers.yaml"
+[project.entry-points."invenio_previewer.previewers"]
+mvs = "oarepo_previewer.previewers.mvs"
 
 [tool.hatch.build.targets.sdist]
 include = [

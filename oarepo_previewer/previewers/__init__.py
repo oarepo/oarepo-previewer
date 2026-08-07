@@ -6,3 +6,5 @@
 # details.
 #
 """Contrib previewers for invenio-previewer."""
+
+from __future__ import annotations

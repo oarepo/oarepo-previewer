@@ -11,10 +11,19 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from flask import Blueprint
+
 from . import config
 
 if TYPE_CHECKING:
     from flask import Flask
+
+blueprint = Blueprint(
+    "oarepo_previewer",
+    __name__,
+    template_folder="templates",
+)
+"""Blueprint exposing the contrib previewer templates."""
 
 
 class OARepoPreviewerExt:
@@ -49,6 +58,7 @@ class OARepoPreviewerExt:
         """
         self.init_config(app)
         self.register_previewers(app)
+        app.register_blueprint(blueprint)
         app.extensions["oarepo-previewer"] = self
 
     def init_config(self, app: Flask) -> None:
