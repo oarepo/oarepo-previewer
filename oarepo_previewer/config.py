@@ -7,9 +7,16 @@
 #
 """Package configuration."""
 
-OAREPO_PREVIEWER_ENABLED: list[str] = []
+from __future__ import annotations
+
+OAREPO_PREVIEWER_ENABLED = [
+    "mvs",
+]
 """Contrib previewers to register into invenio-previewer's ``PREVIEWER_PREFERENCE``.
 
-Names must match entry points in the ``invenio_previewer.previewers`` group,
-e.g. ``["yaml_prismjs"]``. Empty list leaves ``PREVIEWER_PREFERENCE`` untouched.
+Names must match entry points in the ``invenio_previewer.previewers`` group.
+Set to an empty list to leave ``PREVIEWER_PREFERENCE`` untouched.
 """
+
+OAREPO_PREVIEWER_MVS_MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+"""Maximum file size in bytes for MolViewSpec files to be previewed."""

@@ -6,3 +6,5 @@
 # details.
 #
 """Tests for oarepo-previewer."""
+
+from __future__ import annotations
