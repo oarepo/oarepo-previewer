@@ -18,11 +18,12 @@
      Ship the viewer as an invenio-assets webpack bundle (see
      invenio_previewer's webpack.py) rather than linking it from a CDN,
      and mind your CSP headers. #}
-  <div id="mvs-viewer" style="height: 480px; width: 100%; position: relative;"></div>
-  {% if is_container %}
-    <p>MVSX container file</p>
-  {% else %}
-    <pre id="mvs-raw-content">{{ mvs_data }}</pre>
-  {% endif %}
+  <div id="mvs-viewer" style="height: 480px; width: 100%; position: relative;">Loading...</div>
+  <div id="mvs-viewer-params" data-uri={{ file.uri }} style="display: none;"></div>
 </div>
 {% endblock %}
+
+{% block javascript %}
+  {{ super() }}
+  {{ webpack['mol_previewer.js'] }}
+{% endblock javascript %}
