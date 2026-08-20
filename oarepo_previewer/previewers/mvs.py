@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flask import after_this_request, current_app, render_template
+from flask import current_app, render_template
 from invenio_previewer.proxies import current_previewer
 
 if TYPE_CHECKING:
@@ -33,34 +33,17 @@ previewable_extensions = ["mvsj", "mvsx"]
 
 def can_preview(file: PreviewFile) -> bool:
     """Determine if the given file can be previewed."""
+    # TODO: remove max file size and extend accaptable file extensions to include .pdb, .cif, .mmcif, etc.
     max_size = current_app.config.get("OAREPO_PREVIEWER_MVS_MAX_FILE_SIZE_BYTES", 10 * 1024 * 1024)
     return bool(file.is_local() and file.has_extensions(".mvsj", ".mvsx")) and file.size <= max_size
 
 
 def preview(file: PreviewFile) -> str:
     """Render the preview template with the file content as ``mvs_data``."""
-    # @after_this_request
-    # def relax_csp_for_dev(response):
-    #     if current_app.debug:
-    #         csp = response.headers.get('Content-Security-Policy', '')
-    #         if csp and "'unsafe-eval'" not in csp:
-    #             response.headers['Content-Security-Policy'] = csp.replace(
-    #                 "script-src", 
-    #                 "script-src 'unsafe-eval'"
-    #             )
-    #     return response
-    
-    max_bytes = current_app.config["OAREPO_PREVIEWER_MVS_MAX_FILE_SIZE_BYTES"]
-    with file.open() as fp:
-        data = fp.read(max_bytes)
-
-    is_container = bool(file.has_extensions(".mvsx"))
     return str(
         render_template(
             "oarepo_previewer/mvs.html",
             file=file,
-            mvs_data=None if is_container else data.decode("utf-8", errors="ignore"),
-            is_container=is_container,
             js_bundles=current_previewer.js_bundles,
             css_bundles=current_previewer.css_bundles,
         )
