@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flask import current_app, render_template
+from flask import after_this_request, current_app, render_template
 from invenio_previewer.proxies import current_previewer
 
 if TYPE_CHECKING:
@@ -39,13 +39,22 @@ def can_preview(file: PreviewFile) -> bool:
 
 def preview(file: PreviewFile) -> str:
     """Render the preview template with the file content as ``mvs_data``."""
+    # @after_this_request
+    # def relax_csp_for_dev(response):
+    #     if current_app.debug:
+    #         csp = response.headers.get('Content-Security-Policy', '')
+    #         if csp and "'unsafe-eval'" not in csp:
+    #             response.headers['Content-Security-Policy'] = csp.replace(
+    #                 "script-src", 
+    #                 "script-src 'unsafe-eval'"
+    #             )
+    #     return response
+    
     max_bytes = current_app.config["OAREPO_PREVIEWER_MVS_MAX_FILE_SIZE_BYTES"]
     with file.open() as fp:
         data = fp.read(max_bytes)
 
     is_container = bool(file.has_extensions(".mvsx"))
-    # TODO(skeleton): .mvsx is a ZIP container - unpack it and pass the
-    # embedded .mvsj description (and its data files) instead of None.
     return str(
         render_template(
             "oarepo_previewer/mvs.html",
