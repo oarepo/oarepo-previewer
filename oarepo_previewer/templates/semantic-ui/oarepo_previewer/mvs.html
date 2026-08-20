@@ -10,20 +10,13 @@
 
 {% block panel %}
 <div id="oarepo-mvs-previewer">
-  {# TODO: plug in a MolViewSpec-aware viewer of your choice here. For a
-     .mvsj file the JSON description is available to JavaScript as:
-
-       const mvsData = {{ mvs_data | tojson }};
-
-     Ship the viewer as an invenio-assets webpack bundle (see
-     invenio_previewer's webpack.py) rather than linking it from a CDN,
-     and mind your CSP headers. #}
-  <div id="mvs-viewer" style="height: 480px; width: 100%; position: relative;">Loading...</div>
+  <div id="mvs-viewer" style="height: 400px; width: 100%; position: relative;">Loading the viewer...</div>
   <div id="mvs-viewer-params" data-uri={{ file.uri }} style="display: none;"></div>
 </div>
 {% endblock %}
 
 {% block javascript %}
   {{ super() }}
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/molstar/build/viewer/molstar.js"></script>
   {{ webpack['mol_previewer.js'] }}
 {% endblock javascript %}
