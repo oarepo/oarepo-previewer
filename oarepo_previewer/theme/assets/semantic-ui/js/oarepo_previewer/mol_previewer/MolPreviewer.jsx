@@ -96,10 +96,18 @@ export const MolPreviewer = ({ uri }) => {
       // TODO: handle errors in loading the structure or MVS file and display an error message to the user.
       if (isStructureFormat(extension)) {
         const format = getMolstarFormat(extension);
-        await pluginRef.current.loadStructureFromUrl(uri, format, isBinaryFormat(extension));
+        try {
+          await pluginRef.current.loadStructureFromUrl(uri, format, isBinaryFormat(extension));
+        } catch (error) {
+          console.error(`Error loading structure file: <${error}>!`);
+        }
       } else if (isMVSFormat(extension)) {
         const format = getMolstarFormat(extension);
-        await pluginRef.current.loadMvsFromUrl(uri, format);
+        try {
+          await pluginRef.current.loadMvsFromUrl(uri, format);
+        } catch (error) {
+          console.error(`Error loading MVS file: <${error}>!`);
+        }
       } else {
         console.error(`Unsupported file format: <${extension}>!`); // Not reachable in the current implementation because of `previewable_extensions` defined in `mvs.py`.
       }
