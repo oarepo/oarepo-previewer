@@ -27,15 +27,15 @@ from invenio_previewer.proxies import current_previewer
 if TYPE_CHECKING:
     from invenio_previewer.api import PreviewFile
 
-previewable_extensions = ["mvsj", "mvsx"]
+previewable_extensions = ["mvsj", "mvsx", "pdb", "ent", "pdbqt", "cif", "bcif", "mcif", "mmcif", "mol", "mol2", "gro", "sdf", "sd", "xyz"]
 """File extensions that can be previewed by this previewer."""
 
 
 def can_preview(file: PreviewFile) -> bool:
     """Determine if the given file can be previewed."""
-    # TODO: remove max file size and extend accaptable file extensions to include .pdb, .cif, .mmcif, etc.
+    # TODO: remove max file size?
     max_size = current_app.config.get("OAREPO_PREVIEWER_MVS_MAX_FILE_SIZE_BYTES", 10 * 1024 * 1024)
-    return bool(file.is_local() and file.has_extensions(".mvsj", ".mvsx")) and file.size <= max_size
+    return bool(file.is_local() and file.has_extensions(".mvsj", ".mvsx", ".pdb", ".ent", ".pdbqt", ".cif", ".bcif", ".mcif", ".mmcif", ".mol", ".mol2", ".gro", ".sdf", ".sd", ".xyz")) and file.size <= max_size # TODO: reuse previewable_extensions array variable here.
 
 
 def preview(file: PreviewFile) -> str:
