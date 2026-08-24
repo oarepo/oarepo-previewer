@@ -29,7 +29,9 @@ theme = WebpackThemeBundle(
             "entry": {
                 "mol_previewer": "./js/oarepo_previewer/mol_previewer/index.js",
             },
-            "dependencies": {},
+            "dependencies": {
+                "molstar": "^5.11.0",    
+            },
             "devDependencies": {"eslint-plugin-i18next": "^6.0.3",},
             "aliases": {
                 # search and edit
