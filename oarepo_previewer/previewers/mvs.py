@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flask import current_app, render_template
+from flask import render_template
 from invenio_previewer.proxies import current_previewer
 
 if TYPE_CHECKING:
@@ -33,9 +33,8 @@ previewable_extensions = ["mvsj", "mvsx", "pdb", "ent", "pdbqt", "cif", "bcif", 
 
 def can_preview(file: PreviewFile) -> bool:
     """Determine if the given file can be previewed."""
-    # TODO: remove max file size?
-    max_size = current_app.config.get("OAREPO_PREVIEWER_MVS_MAX_FILE_SIZE_BYTES", 10 * 1024 * 1024)
-    return bool(file.is_local() and file.has_extensions(".mvsj", ".mvsx", ".pdb", ".ent", ".pdbqt", ".cif", ".bcif", ".mcif", ".mmcif", ".mol", ".mol2", ".gro", ".sdf", ".sd", ".xyz")) and file.size <= max_size # TODO: reuse previewable_extensions array variable here.
+    extensions_with_dots = [f".{ext}" for ext in previewable_extensions]
+    return bool(file.is_local() and file.has_extensions(*extensions_with_dots))
 
 
 def preview(file: PreviewFile) -> str:
