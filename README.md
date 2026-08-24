@@ -16,9 +16,27 @@ invenio-previewer's `PREVIEWER_PREFERENCE`.
 
 ## Shipped previewers
 
-| Entry point | Extensions | Notes |
-|-------------|------------|-------|
-| `mvs` | `.mvsj`, `.mvsx` (MolViewSpec) | Skeleton: extracts the MolViewSpec description (`.mvsj`; `.mvsx` container unpack is a TODO) and passes it to the template as `mvs_data`, which renders the raw content. Plugging in an actual MolViewSpec-aware JavaScript viewer is left to the deployment — see the integration point in `oarepo_previewer/templates/semantic-ui/oarepo_previewer/mvs.html`. |
+### Molecular Viewer (`mvs`)
+
+A unified molecular structure previewer powered by **Molstar**, supporting a wide range of molecular and crystallographic file formats:
+
+| Extension | Format |
+|-----------|--------|
+| `.mvsj` | MolViewSpec JSON description |
+| `.mvsx` | MolViewSpec ZIP container |
+| `.pdb` | Protein Data Bank |
+| `.ent` | PDB legacy format |
+| `.cif` | Crystallographic Information File |
+| `.bcif` | Binary CIF (compressed) |
+| `.mcif` | Magnetic CIF |
+| `.mmcif` | Macro-molecular CIF |
+| `.mol` / `.sdf` / `.sd` | MDL Molfile |
+| `.mol2` | Tripos Mol2 |
+| `.gro` | GROMACS structure |
+| `.xyz` | XYZ coordinate format |
+| `.pdbqt` | PDBQT (AutoDock) |
+
+The previewer leverages Molstar's native support for these formats, providing 3D visualization directly in the browser. Configuration is handled via the template which loads Molstar from CDN and initializes the viewer with the file URI.
 
 ## Configuration
 
