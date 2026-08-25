@@ -114,7 +114,6 @@ export const MolstarPreviewer = ({ uri }) => {
         if (
           !(await plugin.initViewerAsync(canvasRef.current, viewerRef.current))
         ) {
-          console.error("Failed to init Mol* WebGL Context!");
           setError("Failed to init Mol* WebGL Context!");
           return;
         }
@@ -132,18 +131,16 @@ export const MolstarPreviewer = ({ uri }) => {
         } else if (isMVSFormat(extension)) {
           await loadMVSFromUrl(plugin, uri, format);
         } else {
-          console.error(`Unsupported file format: <${extension}>!`);
           setError(`Unsupported file format: <${extension}>!`);
         }
       } catch (err) {
-        console.error(`Error loading file: <${err}>!`);
-        setError(err.message || String(err));
+        setError(`Error loading file: <${err}>!`);
 
         if (pluginRef.current) {
           try {
             pluginRef.current.dispose();
           } catch (disposeErr) {
-            console.warn("Molstar dispose failed: <", disposeErr, ">!");
+            console.warn("Mol* dispose failed: <", disposeErr, ">!");
           }
           pluginRef.current = null;
         }
@@ -159,24 +156,12 @@ export const MolstarPreviewer = ({ uri }) => {
     };
   }, [uri]);
 
-  // TODO: temporary, have to report error up from the iframe to the mvs.html template hidden div, and there have script which shows this Molstar div or default error component (invenio_previewer/default.html)
+  // Handle async errors by rethrowing them in a sync manner.
   if (error) {
-    return (
-      <div style={{ padding: "20px" }}>
-        <h3>
-          <i className="fa fa-remove"></i> Cannot preview file
-        </h3>
-        <p>
-          Sorry, we are unfortunately not able to preview this file as it
-          contains errors.
-        </p>
-        <p>
-          <small>Error: {error}</small>
-        </p>
-      </div>
-    );
+    throw new Error(error);
   }
 
+  // Render the component.
   return (
     <div
       ref={viewerRef}
@@ -190,5 +175,8 @@ export const MolstarPreviewer = ({ uri }) => {
   );
 };
 
-MolstarPreviewer.propTypes = { uri: PropTypes.string.isRequired };
+MolstarPreviewer.propTypes = {
+  uri: PropTypes.string.isRequired, // The URI of the molecular data file to be loaded and visualized by Mol*.
+};
+
 export default MolstarPreviewer;
