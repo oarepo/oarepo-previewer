@@ -1,7 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { i18next } from "@translations/oarepo_ui/i18next";
+import Default from "./Default";
 
+/**
+ * PreviewerErrorBoundary is a React component that acts as an error boundary for its child components.
+ * It catches JavaScript errors anywhere in its child component tree, logs those errors, and displays a fallback UI instead of the component tree that crashed.
+ */
 export class PreviewerErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -27,25 +31,13 @@ export class PreviewerErrorBoundary extends React.Component {
 
     if (hasError) {
       return (
-        <div className="ui container">
-          <div className="ui padded grid column">
-            <div className="column">
-              <h3>
-                <i className="times icon"></i> {i18next.t("Cannot preview file")}
-              </h3>
-              <p>
-                {i18next.t(
-                  "Sorry, we are unfortunately not able to preview this file.",
-                )}
-              </p>
-              {detailedErrorMessage && (
-                <p className="ui red message">
-                  {detailedErrorMessage}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
+        <Default
+          children={
+            detailedErrorMessage && (
+              <p className="ui red message">{detailedErrorMessage}</p>
+            )
+          }
+        ></Default>
       );
     }
 
