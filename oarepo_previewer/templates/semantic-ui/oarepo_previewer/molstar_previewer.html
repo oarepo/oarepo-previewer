@@ -9,13 +9,13 @@
 {%- extends config.PREVIEWER_ABSTRACT_TEMPLATE %}
 
 {% block panel %}
-<div id="oarepo-mvs-previewer">
-  <div id="mvs-viewer" style="height: 400px; width: 100%; position: relative;">Loading the viewer...</div>
-  <div id="mvs-viewer-params" data-uri={{ file.uri }} style="display: none;"></div>
+<div id="oarepo-molstar-previewer">
+  <div id="molstar-viewer" style="height: 400px; width: 100%; position: relative;">Loading the viewer...</div>
+  <div id="molstar-viewer-params" data-uri={{ file.uri }} style="display: none;"></div>
 </div>
 {% endblock %}
 
 {% block javascript %}
   {{ super() }}
-  {{ webpack['mol_previewer.js'] }}
+  {{ webpack['molstar_previewer.js'] }}
 {% endblock javascript %}

@@ -21,7 +21,7 @@ def test_extension_registered(app):
 
 def test_default_config(app):
     """Default config is initialized with the OAREPO_PREVIEWER_ prefix."""
-    assert app.config["OAREPO_PREVIEWER_ENABLED"] == ["mvs"]
+    assert app.config["OAREPO_PREVIEWER_ENABLED"] == ["mol"]
 
 
 def test_enabled_previewers_prepended():

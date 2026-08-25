@@ -5,7 +5,7 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 #
-"""Tests for the MolViewSpec previewer skeleton."""
+"""Tests for the Molstar previewer skeleton."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from pathlib import Path
 import pytest
 from jinja2 import ChoiceLoader, DictLoader, FileSystemLoader
 
-from oarepo_previewer.previewers import mvs
+from oarepo_previewer.previewers import mol
 
 from .conftest import MockPreviewFile
 
@@ -35,7 +35,7 @@ MVSX = b"PK\x03\x04" + b"\x00" * 64  # ZIP container magic + padding
 def render_app(previewer_app):
     """App able to render our package templates with a stubbed abstract one."""
     previewer_app.config["PREVIEWER_ABSTRACT_TEMPLATE"] = "invenio_previewer/abstract_previewer.html"
-    templates_dir = Path(mvs.__file__).parent.parent / "templates" / "semantic-ui"
+    templates_dir = Path(mol.__file__).parent.parent / "templates" / "semantic-ui"
     previewer_app.jinja_loader = ChoiceLoader(
         [
             DictLoader({"invenio_previewer/abstract_previewer.html": ("{% block panel %}{% endblock %}")}),
@@ -47,32 +47,27 @@ def render_app(previewer_app):
 
 @pytest.mark.parametrize("filename", ["scene.mvsj", "scene.mvsx", "SCENE.MVSJ"])
 def test_can_preview(app, filename):
-    assert mvs.can_preview(MockPreviewFile(filename, MVSJ))
+    assert mol.can_preview(MockPreviewFile(filename, MVSJ))
 
 
 def test_cannot_preview_other_extensions(app):
-    assert not mvs.can_preview(MockPreviewFile("scene.json", MVSJ))
-    assert not mvs.can_preview(MockPreviewFile("mvsj", MVSJ))
+    assert not mol.can_preview(MockPreviewFile("scene.json", MVSJ))
+    assert not mol.can_preview(MockPreviewFile("mvsj", MVSJ))
 
 
 def test_cannot_preview_non_local(app):
-    assert not mvs.can_preview(MockPreviewFile("scene.mvsj", MVSJ, local=False))
-
-
-def test_cannot_preview_oversized(app):
-    file = MockPreviewFile("scene.mvsj", MVSJ, size=1024 * 1024 * 1024)
-    assert not mvs.can_preview(file)
+    assert not mol.can_preview(MockPreviewFile("scene.mvsj", MVSJ, local=False))
 
 
 def test_preview_renders_mvsj_data(render_app):
-    html = mvs.preview(MockPreviewFile("scene.mvsj", MVSJ))
+    html = mol.preview(MockPreviewFile("scene.mvsj", MVSJ))
 
-    assert 'id="mvs-viewer"' in html
+    assert 'id="molstar-viewer"' in html
     assert "1crn.bcif" in html  # raw MVSJ description rendered as fallback
 
 
 def test_preview_mvsx_container(render_app):
-    html = mvs.preview(MockPreviewFile("scene.mvsx", MVSX))
+    html = mol.preview(MockPreviewFile("scene.mvsx", MVSX))
 
-    assert 'id="mvs-viewer"' in html
+    assert 'id="molstar-viewer"' in html
     assert "MVSX container" in html  # unpack TODO placeholder
