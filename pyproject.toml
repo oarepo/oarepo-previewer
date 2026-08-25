@@ -26,7 +26,7 @@ oarepo14 = [
 oarepo_previewer = "oarepo_previewer.ext:OARepoPreviewerExt"
 
 [project.entry-points."invenio_previewer.previewers"]
-mvs = "oarepo_previewer.previewers.mvs"
+mol = "oarepo_previewer.previewers.mol"
 
 [project.entry-points."invenio_assets.webpack"]
 oarepo_previewer_theme = "oarepo_previewer.theme.webpack:theme"

@@ -27,7 +27,7 @@ theme = WebpackThemeBundle(
     themes={
         "semantic-ui": {
             "entry": {
-                "mol_previewer": "./js/oarepo_previewer/mol_previewer/index.js",
+                "molstar_previewer": "./js/oarepo_previewer/molstar_previewer/index.js",
             },
             "dependencies": {
                 "molstar": "^5.11.0",    
@@ -35,7 +35,7 @@ theme = WebpackThemeBundle(
             "devDependencies": {"eslint-plugin-i18next": "^6.0.3",},
             "aliases": {
                 # search and edit
-                "@js/oarepo_previewer/mol_previewer": "js/oarepo_previewer/mol_previewer",
+                "@js/oarepo_previewer/molstar_previewer": "js/oarepo_previewer/molstar_previewer",
             },
         }
     },

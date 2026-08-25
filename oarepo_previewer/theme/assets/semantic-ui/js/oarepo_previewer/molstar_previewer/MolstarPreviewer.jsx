@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { PluginContext } from "molstar/lib/mol-plugin/context";
-import { DefaultPluginSpec } from "molstar/lib/mol-plugin/spec";
-import { PluginSpec } from "molstar/lib/mol-plugin/spec";
+import { PluginSpec, DefaultPluginSpec } from "molstar/lib/mol-plugin/spec";
 import { MolViewSpec } from "molstar/lib/extensions/mvs/behavior";
 import {
   loadStructureFromUrl,
@@ -89,7 +88,7 @@ const isMVSFormat = (extension) => {
  * Creates a React component that initializes and renders the Mol* viewer for molecular visualization.
  * Creates the Mol* plugin without React UI not to use any dependencies of React 18, see https://molstar.org/docs/plugin/instance/#plugincontext-without-built-in-react-ui.
  */
-export const MolPreviewer = ({ uri }) => {
+export const MolstarPreviewer = ({ uri }) => {
   const viewerRef = useRef(null);
   const canvasRef = useRef(null);
   const pluginRef = useRef(null);
@@ -191,5 +190,5 @@ export const MolPreviewer = ({ uri }) => {
   );
 };
 
-MolPreviewer.propTypes = { uri: PropTypes.string.isRequired };
-export default MolPreviewer;
+MolstarPreviewer.propTypes = { uri: PropTypes.string.isRequired };
+export default MolstarPreviewer;

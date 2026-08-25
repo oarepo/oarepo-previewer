@@ -10,7 +10,7 @@
 from __future__ import annotations
 
 OAREPO_PREVIEWER_ENABLED = [
-    "mvs",
+    "mol",
 ]
 """Contrib previewers to register into invenio-previewer's ``PREVIEWER_PREFERENCE``.
 

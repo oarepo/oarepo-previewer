@@ -16,7 +16,7 @@ invenio-previewer's `PREVIEWER_PREFERENCE`.
 
 ## Shipped previewers
 
-### Molecular Viewer (`mvs`)
+### Molecular Viewer (`mol`)
 
 A unified molecular structure previewer powered by **Molstar**, supporting a wide range of molecular and crystallographic file formats:
 
@@ -36,13 +36,13 @@ A unified molecular structure previewer powered by **Molstar**, supporting a wid
 | `.xyz` | XYZ coordinate format |
 | `.pdbqt` | PDBQT (AutoDock) |
 
-The previewer leverages Molstar's native support for these formats, providing 3D visualization directly in the browser. Configuration is handled via the template which loads Molstar from CDN and initializes the viewer with the file URI.
+The previewer leverages Molstar's native support for these formats, providing 3D visualization directly in the browser. Configuration is handled via the template which loads Molstar and initializes the viewer with the file URI.
 
 ## Configuration
 
 ```python
 # invenio.cfg
-OAREPO_PREVIEWER_ENABLED = ["mvs"]  # default
+OAREPO_PREVIEWER_ENABLED = ["mol"]  # default
 ```
 
 Set `OAREPO_PREVIEWER_ENABLED = []` to manage `PREVIEWER_PREFERENCE`
@@ -59,7 +59,7 @@ manually.
 
    ```toml
    [project.entry-points."invenio_previewer.previewers"]
-   mvs = "oarepo_previewer.previewers.mvs"
+   mol = "oarepo_previewer.previewers.mol "
    ```
 
 3. Add its name to the default `OAREPO_PREVIEWER_ENABLED` in

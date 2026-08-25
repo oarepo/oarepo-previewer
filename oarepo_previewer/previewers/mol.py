@@ -5,16 +5,13 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 #
-"""Previewer skeleton for MolViewSpec (.mvsj / .mvsx) files.
+"""Previewer skeleton for molecular (such as `.pdb`, `.cif`) and MolViewSpec (`.mvsj`/`.mvsx`) files.
 
 A ``.mvsj`` file is a JSON description of a molecular visualization;
 a ``.mvsx`` file is a ZIP container bundling that description together
 with its data files.
 
-Intentionally viewer-library agnostic: it extracts the file content and
-passes it to the template as ``mvs_data``. Which MolViewSpec-aware
-JavaScript viewer renders it is left to the deployment - see the template
-for the integration point.
+Only file URL is passed to the template.
 """
 
 from __future__ import annotations
@@ -38,10 +35,10 @@ def can_preview(file: PreviewFile) -> bool:
 
 
 def preview(file: PreviewFile) -> str:
-    """Render the preview template with the file content as ``mvs_data``."""
+    """Render the preview template."""
     return str(
         render_template(
-            "oarepo_previewer/mvs.html",
+            "oarepo_previewer/molstar_previewer.html",
             file=file,
             js_bundles=current_previewer.js_bundles,
             css_bundles=current_previewer.css_bundles,
