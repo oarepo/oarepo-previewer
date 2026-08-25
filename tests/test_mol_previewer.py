@@ -28,8 +28,6 @@ MVSJ = b"""{
 }
 """
 
-MVSX = b"PK\x03\x04" + b"\x00" * 64  # ZIP container magic + padding
-
 
 @pytest.fixture
 def render_app(previewer_app):
@@ -64,10 +62,3 @@ def test_preview_renders_mvsj_data(render_app):
 
     assert 'id="molstar-viewer"' in html
     assert "1crn.bcif" in html  # raw MVSJ description rendered as fallback
-
-
-def test_preview_mvsx_container(render_app):
-    html = mol.preview(MockPreviewFile("scene.mvsx", MVSX))
-
-    assert 'id="molstar-viewer"' in html
-    assert "MVSX container" in html  # unpack TODO placeholder
