@@ -24,7 +24,23 @@ from invenio_previewer.proxies import current_previewer
 if TYPE_CHECKING:
     from invenio_previewer.api import PreviewFile
 
-previewable_extensions = ["mvsj", "mvsx", "pdb", "ent", "pdbqt", "cif", "bcif", "mcif", "mmcif", "mol", "mol2", "gro", "sdf", "sd", "xyz"]
+previewable_extensions = [
+    "mvsj",
+    "mvsx",
+    "pdb",
+    "ent",
+    "pdbqt",
+    "cif",
+    "bcif",
+    "mcif",
+    "mmcif",
+    "mol",
+    "mol2",
+    "gro",
+    "sdf",
+    "sd",
+    "xyz",
+]
 """File extensions that can be previewed by this previewer."""
 
 
