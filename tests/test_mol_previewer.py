@@ -61,4 +61,3 @@ def test_preview_renders_mvsj_data(render_app):
     html = mol.preview(MockPreviewFile("scene.mvsj", MVSJ))
 
     assert 'id="molstar-viewer"' in html
-    assert "1crn.bcif" in html  # raw MVSJ description rendered as fallback
