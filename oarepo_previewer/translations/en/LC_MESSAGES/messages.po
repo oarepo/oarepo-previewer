@@ -1,0 +1,13 @@
+#
+msgid ""
+msgstr ""
+
+#: /home/marek-eibel/Work/CESNET/Repositories/oarepo-previewer/oarepo_previewer/templates/semantic-ui/oarepo_previewer/molstar_previewer.html:13
+msgid "Loading the viewer..."
+msgstr ""
+
+msgid "Cannot preview file"
+msgstr ""
+
+msgid "Sorry, we are unfortunately not able to preview this file."
+msgstr ""
