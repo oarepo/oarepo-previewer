@@ -31,6 +31,9 @@ mol = "oarepo_previewer.previewers.mol"
 [project.entry-points."invenio_assets.webpack"]
 oarepo_previewer_theme = "oarepo_previewer.theme.webpack:theme"
 
+[project.entry-points."invenio_i18n.translations"]
+oarepo_previewer_messages = "oarepo_previewer"
+
 [tool.hatch.build.targets.sdist]
 include = [
     "/oarepo_previewer",
