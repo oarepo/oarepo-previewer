@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Default from "./Default";
+import PreviewerFallback from "./PreviewerFallback";
 
 /**
  * PreviewerErrorBoundary is a React component that acts as an error boundary for its child components.
@@ -31,13 +31,13 @@ export class PreviewerErrorBoundary extends React.Component {
 
     if (hasError) {
       return (
-        <Default
+        <PreviewerFallback
           children={
             detailedErrorMessage && (
               <p className="ui red message">{detailedErrorMessage}</p>
             )
           }
-        ></Default>
+        ></PreviewerFallback>
       );
     }
 
