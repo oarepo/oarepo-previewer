@@ -5,7 +5,7 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 #
-"""Previewer skeleton for molecular (such as `.pdb`, `.cif`) and MolViewSpec (`.mvsj`/`.mvsx`) files.
+"""Previewer for molecular (such as `.pdb`, `.cif`) and MolViewSpec (`.mvsj`/`.mvsx`) files.
 
 A ``.mvsj`` file is a JSON description of a molecular visualization;
 a ``.mvsx`` file is a ZIP container bundling that description together
