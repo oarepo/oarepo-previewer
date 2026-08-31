@@ -1,11 +1,11 @@
 #
-# This file is part of Invenio.
-# Copyright (C) 2015-2018 CERN.
+# Copyright (C) 2026 CESNET z.s.p.o.
 #
-# Invenio is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
-
-"""JS/CSS bundles for oarepo-ui.
+# oarepo-previewer is free software; you can redistribute it and/or
+# modify it under the terms of the MIT License; see LICENSE file for more
+# details.
+#
+"""JS/CSS bundles for oarepo-previewer.
 
 You include one of the bundles in a page like the example below (using
 ``base`` bundle as an example):
@@ -32,9 +32,8 @@ theme = WebpackThemeBundle(
             "dependencies": {
                 "molstar": "^5.11.0",
             },
-            "devDependencies": {"eslint-plugin-i18next": "^6.0.3"},
+            "devDependencies": {},
             "aliases": {
-                # search and edit
                 "@js/oarepo_previewer/molstar_previewer": "js/oarepo_previewer/molstar_previewer",
             },
         }
