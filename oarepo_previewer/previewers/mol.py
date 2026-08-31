@@ -47,14 +47,9 @@ previewable_extensions = [
 def can_preview(file: PreviewFile) -> bool:
     """Determine if the given file can be previewed."""
     extensions_with_dots = [f".{ext}" for ext in previewable_extensions]
-    max_file_size = current_app.config.get(
-        "OAREPO_PREVIEWER_MOL_MAX_FILE_SIZE_BYTES", 200 * 1024 * 1024
-    )
+    max_file_size = current_app.config.get("OAREPO_PREVIEWER_MOL_MAX_FILE_SIZE_BYTES", 200 * 1024 * 1024)
 
-    return (
-        bool(file.is_local() and file.has_extensions(*extensions_with_dots))
-        and file.size <= max_file_size
-    )
+    return bool(file.is_local() and file.has_extensions(*extensions_with_dots)) and file.size <= max_file_size
 
 
 def preview(file: PreviewFile) -> str:

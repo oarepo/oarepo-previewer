@@ -5,7 +5,7 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 #
-"""Tests for the Molstar previewer skeleton."""
+"""Tests for the Molstar previewer."""
 
 from __future__ import annotations
 
