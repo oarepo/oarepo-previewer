@@ -11,11 +11,19 @@ import {
 /**
  * Extracts the file extension from a given URI.
  * @param uri uri of the file (e.g., "https://example.com/file.pdb?param=value#section")
- * @returns extension of the file (e.g., "pdb")
+ * @returns extension of the file (e.g., "pdb") or null is no extension is found or the URI is not valid
  */
 const getExtension = (uri) => {
-  const cleanUri = uri.split("?")[0].split("#")[0];
-  return cleanUri.split(".").pop().toLowerCase();
+  try {
+    const pathname = new URL(uri).pathname;
+    const substrings = pathname.split(".");
+    if (substrings.length > 1) {
+      return substrings[substrings.length - 1].toLowerCase();
+    }
+  } catch (error) {
+    console.error("Error occurred while parsing URI:", error);
+  }
+  return null; // Non-valid URL or no extension.
 };
 
 /**
@@ -123,6 +131,11 @@ export const MolstarPreviewer = ({ uri }) => {
         if (!uri) return;
 
         const extension = getExtension(uri);
+        if (!extension) {
+          setError("Failed to determine file extension from URI!");
+          return;
+        }
+
         const format = getMolstarFormat(extension);
         const isBinary = isBinaryFormat(extension);
 
