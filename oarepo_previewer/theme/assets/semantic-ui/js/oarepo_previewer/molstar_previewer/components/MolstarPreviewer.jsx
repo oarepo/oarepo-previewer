@@ -15,7 +15,7 @@ import {
  */
 const getExtension = (uri) => {
   try {
-    const pathname = new URL(uri).pathname;
+    const pathname = new URL(uri, "http://localhost").pathname; // Use a base URL to handle relative URIs.
     const substrings = pathname.split(".");
     if (substrings.length > 1) {
       return substrings[substrings.length - 1].toLowerCase();
