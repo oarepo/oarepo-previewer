@@ -17,7 +17,7 @@ export class PreviewerErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.info(
+    console.error(
       "PreviewerErrorBoundary caught following error:",
       error,
       errorInfo,
