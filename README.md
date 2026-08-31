@@ -43,6 +43,7 @@ The previewer leverages Molstar's native support for these formats, providing 3D
 ```python
 # invenio.cfg
 OAREPO_PREVIEWER_ENABLED = ["mol"]  # default
+OAREPO_PREVIEWER_MOL_MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024
 ```
 
 Set `OAREPO_PREVIEWER_ENABLED = []` to manage `PREVIEWER_PREFERENCE`

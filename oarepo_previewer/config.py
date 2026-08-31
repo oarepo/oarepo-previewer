@@ -17,3 +17,6 @@ OAREPO_PREVIEWER_ENABLED = [
 Names must match entry points in the ``invenio_previewer.previewers`` group.
 Set to an empty list to leave ``PREVIEWER_PREFERENCE`` untouched.
 """
+
+OAREPO_PREVIEWER_MOL_MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024
+"""Maximum file size in bytes for Mol* files to be previewed."""
