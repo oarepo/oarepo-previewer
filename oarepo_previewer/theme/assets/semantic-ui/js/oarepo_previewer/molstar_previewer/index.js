@@ -3,13 +3,13 @@ import ReactDOM from "react-dom";
 import MolstarPreviewer from "./components/MolstarPreviewer";
 import PreviewerErrorBoundary from "./components/PreviewerErrorBoundary";
 
-const domContainer = document.getElementById("molstar-viewer");
+const viewerContainer = document.getElementById("molstar-viewer");
 
-if (domContainer) {
+if (viewerContainer) {
   ReactDOM.render(
     <PreviewerErrorBoundary>
-      <MolstarPreviewer uri={domContainer.getAttribute("data-uri")} />
+      <MolstarPreviewer uri={viewerContainer.getAttribute("data-uri")} />
     </PreviewerErrorBoundary>,
-    domContainer,
+    viewerContainer,
   );
 }
