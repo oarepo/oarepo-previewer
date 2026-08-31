@@ -34,9 +34,7 @@ theme = WebpackThemeBundle(
                 "molstar": "^5.11.0",
             },
             "devDependencies": {},
-            "aliases": {
-                "@js/oarepo_previewer/molstar_previewer": "js/oarepo_previewer/molstar_previewer",
-            },
+            "aliases": {},
         }
     },
 )
