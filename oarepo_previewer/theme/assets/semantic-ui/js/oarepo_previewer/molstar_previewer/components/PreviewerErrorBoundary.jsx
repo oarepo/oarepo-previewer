@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Message } from "semantic-ui-react";
 import PreviewerFallback from "./PreviewerFallback";
 
 /**
@@ -34,7 +35,9 @@ export class PreviewerErrorBoundary extends React.Component {
         <PreviewerFallback
           children={
             detailedErrorMessage && (
-              <p className="ui red message">{detailedErrorMessage}</p>
+              <Message negative>
+                <p>{detailedErrorMessage}</p>
+              </Message>
             )
           }
         ></PreviewerFallback>
