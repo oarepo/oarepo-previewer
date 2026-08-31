@@ -9,8 +9,68 @@ import {
 } from "molstar/lib/extensions/plugin/loaders";
 
 /**
+ * Utility class for mapping file extensions to Mol* formats and determining their properties.
+ * Based on https://molstar.org/docs/plugin/file-formats/ and https://molstar.org/viewer-docs/extensions/mvs/.
+ */
+class MolstarFormats {
+  static FormatMap = {
+    pdb: { formatGroup: "structure", format: "pdb", isBinary: false },
+    ent: { formatGroup: "structure", format: "pdb", isBinary: false },
+    pdbqt: { formatGroup: "structure", format: "pdb", isBinary: false },
+    cif: { formatGroup: "structure", format: "mmcif", isBinary: false },
+    bcif: { formatGroup: "structure", format: "mmcif", isBinary: true },
+    mcif: { formatGroup: "structure", format: "mmcif", isBinary: false },
+    mmcif: { formatGroup: "structure", format: "mmcif", isBinary: false },
+    mol: { formatGroup: "structure", format: "mol", isBinary: false },
+    mol2: { formatGroup: "structure", format: "mol2", isBinary: false },
+    gro: { formatGroup: "structure", format: "gro", isBinary: false },
+    sdf: { formatGroup: "structure", format: "sdf", isBinary: false },
+    sd: { formatGroup: "structure", format: "sdf", isBinary: false },
+    xyz: { formatGroup: "structure", format: "xyz", isBinary: false },
+    mvsj: { formatGroup: "mvs", format: "mvsj", isBinary: false },
+    mvsx: { formatGroup: "mvs", format: "mvsx", isBinary: true },
+  };
+
+  /**
+   * Retrieves the appropriate format for Molstar based on the file extension.
+   * @param extension lower case extension of the file (e.g., "pdb", "cif", "mvsj")
+   * @returns the corresponding Molstar format or "mmcif" as a default
+   */
+  static getMolstarFormat(extension) {
+    return MolstarFormats.FormatMap[extension]?.format || "mmcif";
+  }
+
+  /**
+   * Decides whether the given file extension corresponds to a binary format.
+   * @param extension lower case extension of the file (e.g., "pdb", "cif", "mvsj")
+   * @returns true if the format is binary, false otherwise (defaults to false if the extension is not recognized)
+   */
+  static isBinaryFormat(extension) {
+    return MolstarFormats.FormatMap[extension]?.isBinary ?? false;
+  }
+
+  /**
+   * Decides whether the given file extension corresponds to a structure format.
+   * @param extension lower case extension of the file (e.g., "pdb", "cif", "mvsj")
+   * @returns true if the format is a structure format, false otherwise (defaults to false if the extension is not recognized)
+   */
+  static isStructureFormat(extension) {
+    return MolstarFormats.FormatMap[extension]?.formatGroup === "structure";
+  }
+
+  /**
+   * Decides whether the given file extension corresponds to an MVS format.
+   * @param extension lower case extension of the file (e.g., "pdb", "cif", "mvsj")
+   * @returns true if the format is an MVS format, false otherwise (defaults to false if the extension is not recognized)
+   */
+  static isMVSFormat(extension) {
+    return MolstarFormats.FormatMap[extension]?.formatGroup === "mvs";
+  }
+}
+
+/**
  * Extracts the file extension from a given URI.
- * @param uri uri of the file (e.g., "https://example.com/file.pdb?param=value#section")
+ * @param uri uri of the file (e.g., "/records/file.pdb?param=value#section")
  * @returns extension of the file (e.g., "pdb") or null is no extension is found or the URI is not valid
  */
 const getExtension = (uri) => {
@@ -24,68 +84,6 @@ const getExtension = (uri) => {
     console.error("Error occurred while parsing URI:", error);
   }
   return null; // Non-valid URL or no extension.
-};
-
-/**
- * Retrieves the appropriate format for Mol* based on the file extension based on https://molstar.org/docs/plugin/file-formats/.
- * @param extension extension of the file (e.g., "pdb", "cif", "mvsj", etc.)
- * @returns format string for Mol* (e.g., "pdb", "mmcif", "mvsj", etc.)
- */
-const getMolstarFormat = (extension) => {
-  if (
-    ["mvsj", "mvsx", "mol", "mol2", "gro", "xyz", "pdb", "sdf", "mmcif"].includes(
-      extension,
-    )
-  ) {
-    return extension;
-  } else if (["ent", "pdbqt"].includes(extension)) {
-    return "pdb";
-  } else if (["sd"].includes(extension)) {
-    return "sdf";
-  }
-
-  return "mmcif"; // For extensions "cif", "bcif", "mcif". And default for unknown extensions.
-};
-
-/**
- * Decides whether the given file extension corresponds to a binary format.
- * @param extension extension of the file (e.g., "pdb", "cif", "mvsj", etc.)
- * @returns flag indicating whether the format is binary (true) or not (false)
- */
-const isBinaryFormat = (extension) => {
-  return ["mvsx", "bcif"].includes(extension);
-};
-
-/**
- * Decides whether the given file extension corresponds to a structure format based on https://molstar.org/docs/plugin/file-formats/.
- * @param extension extension of the file (e.g., "pdb", "cif", "mvsj", etc.)
- * @returns flag indicating whether the format is a structure format (true) or not (false)
- */
-const isStructureFormat = (extension) => {
-  return [
-    "pdb",
-    "ent",
-    "pdbqt",
-    "cif",
-    "bcif",
-    "mcif",
-    "mmcif",
-    "mol",
-    "mol2",
-    "gro",
-    "sdf",
-    "sd",
-    "xyz",
-  ].includes(extension);
-};
-
-/**
- * Decides whether the given file extension corresponds to an MVS format based on https://molstar.org/viewer-docs/extensions/mvs/.
- * @param extension extension of the file (e.g., "mvsj", "mvsx")
- * @returns flag indicating whether the format is an MVS format (true) or not (false)
- */
-const isMVSFormat = (extension) => {
-  return ["mvsj", "mvsx"].includes(extension);
 };
 
 /**
@@ -132,12 +130,12 @@ export const MolstarPreviewer = ({ uri }) => {
           return;
         }
 
-        const format = getMolstarFormat(extension);
-        const isBinary = isBinaryFormat(extension);
+        const format = MolstarFormats.getMolstarFormat(extension);
+        const isBinary = MolstarFormats.isBinaryFormat(extension);
 
-        if (isStructureFormat(extension)) {
+        if (MolstarFormats.isStructureFormat(extension)) {
           await loadStructureFromUrl(plugin, uri, format, isBinary);
-        } else if (isMVSFormat(extension)) {
+        } else if (MolstarFormats.isMVSFormat(extension)) {
           await loadMVSFromUrl(plugin, uri, format);
         } else {
           setError(`Unsupported file format: <${extension}>!`);
