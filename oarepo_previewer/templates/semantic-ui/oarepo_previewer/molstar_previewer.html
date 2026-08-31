@@ -10,8 +10,9 @@
 
 {% block panel %}
   <div id="oarepo-molstar-previewer">
-    <div id="molstar-viewer" style="height: 400px; width: 100%; position: relative;">{{_("Loading the viewer...")}}</div>
-    <div id="molstar-viewer-params" data-uri={{ file.uri }} style="display: none;"></div>
+    <div id="molstar-viewer" data-uri={{ file.uri }} style="height: 400px; width: 100%; position: relative;">{{ _("Loading
+      the viewer...") }}
+    </div>
   </div>
 {% endblock %}
 
