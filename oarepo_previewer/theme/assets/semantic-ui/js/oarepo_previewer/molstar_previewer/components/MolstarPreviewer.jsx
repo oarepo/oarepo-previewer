@@ -75,7 +75,7 @@ class MolstarFormats {
  */
 const getExtension = (uri) => {
   try {
-    const pathname = new URL(uri, "http://localhost").pathname; // Use a base URL to handle relative URIs.
+    const pathname = new URL(uri, "http://localhost").pathname;
     const substrings = pathname.split(".");
     if (substrings.length > 1) {
       return substrings[substrings.length - 1].toLowerCase();
@@ -83,7 +83,7 @@ const getExtension = (uri) => {
   } catch (error) {
     console.error("Error occurred while parsing URI:", error);
   }
-  return null; // Non-valid URL or no extension.
+  return null;
 };
 
 /**
@@ -97,9 +97,16 @@ export const MolstarPreviewer = ({ uri }) => {
 
   const [error, setError] = useState(null);
 
-  // On mount or URI change, initialize the Mol* plugin (see `pluginRef`) and load the molecular data from the provided URI.
+  // On mount, initialize the Mol* plugin (see `pluginRef`) and load the molecular data from the provided URI.
   useEffect(() => {
+    let isMounted = true;
+
     const init = async () => {
+      if (!uri) {
+        setError("A valid file URI is required to initialize the Mol*!");
+        return;
+      }
+
       if (!viewerRef.current || !canvasRef.current) return;
 
       try {
@@ -111,7 +118,14 @@ export const MolstarPreviewer = ({ uri }) => {
           ],
         });
 
+        pluginRef.current = plugin;
+
         await plugin.init();
+
+        // Stop initialization if the component was unmounted while waiting for plugin.init(), as canvas referecene will now be null.
+        if (!isMounted) {
+          return;
+        }
 
         if (
           !(await plugin.initViewerAsync(canvasRef.current, viewerRef.current))
@@ -119,10 +133,6 @@ export const MolstarPreviewer = ({ uri }) => {
           setError("Failed to init Mol* WebGL Context!");
           return;
         }
-
-        pluginRef.current = plugin;
-
-        if (!uri) return;
 
         const extension = getExtension(uri);
         if (!extension) {
@@ -141,7 +151,7 @@ export const MolstarPreviewer = ({ uri }) => {
           setError(`Unsupported file format: <${extension}>!`);
         }
       } catch (err) {
-        setError(`Error loading file: <${err}>!`);
+        setError(`Error while loading file: <${err}>!`);
 
         if (pluginRef.current) {
           try {
@@ -157,6 +167,7 @@ export const MolstarPreviewer = ({ uri }) => {
     init();
 
     return () => {
+      isMounted = false;
       if (pluginRef.current) {
         pluginRef.current.dispose();
       }
@@ -168,7 +179,6 @@ export const MolstarPreviewer = ({ uri }) => {
     throw new Error(error);
   }
 
-  // Render the component.
   return (
     <div
       ref={viewerRef}
