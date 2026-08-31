@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { i18next } from "@translations/invenio_app_rdm/i18next"; // TODO: change to invenio_previewer when it will be available for FE.
 import { PluginContext } from "molstar/lib/mol-plugin/context";
 import { PluginSpec, DefaultPluginSpec } from "molstar/lib/mol-plugin/spec";
 import { MolViewSpec } from "molstar/lib/extensions/mvs/behavior";
@@ -103,7 +104,7 @@ export const MolstarPreviewer = ({ uri }) => {
 
     const init = async () => {
       if (!uri) {
-        setError("A valid file URI is required to initialize the Mol*!");
+        setError(i18next.t("A valid file URI is required to initialize the Mol*!"));
         return;
       }
 
@@ -130,13 +131,13 @@ export const MolstarPreviewer = ({ uri }) => {
         if (
           !(await plugin.initViewerAsync(canvasRef.current, viewerRef.current))
         ) {
-          setError("Failed to init Mol* WebGL Context!");
+          setError(i18next.t("Failed to init Mol* WebGL Context!"));
           return;
         }
 
         const extension = getExtension(uri);
         if (!extension) {
-          setError("Failed to determine file extension from URI!");
+          setError(i18next.t("Failed to determine file extension from URI!"));
           return;
         }
 
@@ -148,10 +149,10 @@ export const MolstarPreviewer = ({ uri }) => {
         } else if (MolstarFormats.isMVSFormat(extension)) {
           await loadMVSFromUrl(plugin, uri, format);
         } else {
-          setError(`Unsupported file format: <${extension}>!`);
+          setError(`${i18next.t("Unsupported file format")}: <${extension}>!`);
         }
       } catch (err) {
-        setError(`Error while loading file: <${err}>!`);
+        setError(`${i18next.t("Error while loading file")}: <${err}>!`);
 
         if (pluginRef.current) {
           try {
