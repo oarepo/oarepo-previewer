@@ -32,23 +32,19 @@ const getExtension = (uri) => {
  * @returns format string for Mol* (e.g., "pdb", "mmcif", "mvsj", etc.)
  */
 const getMolstarFormat = (extension) => {
-  if (["mvsj", "mvsx"].includes(extension)) {
+  if (
+    ["mvsj", "mvsx", "mol", "mol2", "gro", "xyz", "pdb", "sdf", "mmcif"].includes(
+      extension,
+    )
+  ) {
     return extension;
-  } else if (["pdb", "ent", "pdbqt"].includes(extension)) {
+  } else if (["ent", "pdbqt"].includes(extension)) {
     return "pdb";
-  } else if (["mol"].includes(extension)) {
-    return "mol";
-  } else if (["mol2"].includes(extension)) {
-    return "mol2";
-  } else if (["gro"].includes(extension)) {
-    return "gro";
-  } else if (["sdf", "sd"].includes(extension)) {
+  } else if (["sd"].includes(extension)) {
     return "sdf";
-  } else if (["xyz"].includes(extension)) {
-    return "xyz";
   }
 
-  return "mmcif"; // For extensions "cif", "bcif", "mcif", "mmcif". And default for unknown extensions.
+  return "mmcif"; // For extensions "cif", "bcif", "mcif". And default for unknown extensions.
 };
 
 /**
