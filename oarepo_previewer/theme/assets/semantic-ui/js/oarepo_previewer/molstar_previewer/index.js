@@ -8,7 +8,7 @@ const viewerContainer = document.getElementById("molstar-viewer");
 if (viewerContainer) {
   ReactDOM.render(
     <PreviewerErrorBoundary>
-      <MolstarPreviewer uri={viewerContainer.getAttribute("data-uri")} />
+      <MolstarPreviewer uri={viewerContainer.getAttribute("data-file-uri")} />
     </PreviewerErrorBoundary>,
     viewerContainer,
   );
