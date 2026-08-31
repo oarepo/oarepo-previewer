@@ -46,7 +46,7 @@ export class PreviewerErrorBoundary extends React.Component {
 }
 
 PreviewerErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired, // The child components to be rendered within the error boundary.
+  children: PropTypes.node.isRequired,
 };
 
 export default PreviewerErrorBoundary;
