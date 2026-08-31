@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Container, Grid, GridColumn, Icon } from "semantic-ui-react";
 import { i18next } from "@translations/invenio_app_rdm/i18next"; // TODO: change to invenio_previewer when it will be available for FE.
 
 /**
@@ -9,11 +10,12 @@ import { i18next } from "@translations/invenio_app_rdm/i18next"; // TODO: change
 export class PreviewerFallback extends React.Component {
   render() {
     return (
-      <div className="ui container">
-        <div className="ui padded grid column">
-          <div className="column">
+      <Container>
+        <Grid padded>
+          <GridColumn>
             <h3>
-              <i className="times icon"></i> {i18next.t("Cannot preview file")}
+              <Icon name="times" />
+              {i18next.t("Cannot preview file")}
             </h3>
             <p>
               {i18next.t(
@@ -21,9 +23,9 @@ export class PreviewerFallback extends React.Component {
               )}
             </p>
             {this.props.children}
-          </div>
-        </div>
-      </div>
+          </GridColumn>
+        </Grid>
+      </Container>
     );
   }
 }
