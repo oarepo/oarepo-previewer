@@ -33,7 +33,7 @@ const getExtension = (uri) => {
  */
 const getMolstarFormat = (extension) => {
   if (["mvsj", "mvsx"].includes(extension)) {
-    return extension === "mvsx" ? "mvsx" : "mvsj";
+    return extension;
   } else if (["pdb", "ent", "pdbqt"].includes(extension)) {
     return "pdb";
   } else if (["mol"].includes(extension)) {
