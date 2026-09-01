@@ -103,5 +103,7 @@ def test_mvsj_preview_render(app):
     with app.test_request_context():
         html = mol.preview(mock_file)
 
-        assert "molstar_previewer.js" in html
         assert "Preview" in html
+        assert 'id="oarepo-molstar-previewer"' in html
+        assert 'id="molstar-viewer"' in html
+        assert "molstar_previewer.js" in html
