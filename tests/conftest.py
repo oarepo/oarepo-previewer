@@ -5,6 +5,8 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
+from __future__ import annotations
+
 import pytest
 from invenio_app.factory import create_app as invenio_create_app
 
