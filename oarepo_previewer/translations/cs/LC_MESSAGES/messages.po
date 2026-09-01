@@ -3,23 +3,11 @@ msgid ""
 msgstr ""
 
 #: /home/marek-eibel/Work/CESNET/Repositories/oarepo-previewer/oarepo_previewer/templates/semantic-ui/oarepo_previewer/molstar_previewer.html:13
-msgid "Loading the viewer..."
+msgid "Loading the viewer…"
 msgstr "Načítání náhledu souboru…"
 
-msgid "Cannot preview file"
-msgstr "Náhled se nepodařilo zobrazit"
-
-msgid "Sorry, we are unfortunately not able to preview this file."
-msgstr "Omlouváme se, ale není možné zobrazit náhled tohoto souboru."
-
-#: /home/marek-eibel/Work/CESNET/Repositories/oarepo-previewer/oarepo_previewer/templates/semantic-ui/oarepo_previewer/molstar_previewer.html:13
-msgid ""
-"Loading\n"
-"        the viewer..."
-msgstr ""
-
 msgid "A valid file URI is required to initialize the Mol*!"
-msgstr "URI adresa souboru pro náhled je nevalidní!"
+msgstr "URI adresa souboru pro náhled chybí nebo je neplatná!"
 
 msgid "Failed to init Mol* WebGL Context!"
 msgstr "Nepodařilo se inicializovat WebGL kontext pro Mol* prohlížeč!"
@@ -32,3 +20,9 @@ msgstr "Nepodporovaný formát souboru"
 
 msgid "Error while loading file"
 msgstr "Chyba při načítání souboru"
+
+msgid "Cannot preview file"
+msgstr "Náhled se nepodařilo zobrazit"
+
+msgid "Sorry, we are unfortunately not able to preview this file."
+msgstr "Omlouváme se, ale není možné zobrazit náhled tohoto souboru."
