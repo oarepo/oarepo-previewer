@@ -4,67 +4,41 @@
 # oarepo-previewer is free software; you can redistribute it and/or
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
-#
-"""Pytest fixtures."""
-
-from __future__ import annotations
-
-import io
-from pathlib import Path
-from types import SimpleNamespace
-from typing import BinaryIO
 
 import pytest
-from flask import Flask
+from invenio_app.factory import create_app as invenio_create_app
+
+pytest_plugins = [
+    "pytest_oarepo.fixtures",
+    "pytest_oarepo.ui.fixtures",
+]
 
 
-@pytest.fixture
-def app():
-    """Bare Flask application with the extension initialized."""
+@pytest.fixture(scope="module")
+def create_app(instance_path, entry_points):
+    """
+    Spins up a combined UI/API app instead of just API.
+    This ensures flask-webpackext context processors are loaded for Jinja.
+    """
+    return invenio_create_app
+
+
+@pytest.fixture(scope="module")
+def app_config(app_config):
+    app_config["OAREPO_PREVIEWER_ENABLED"] = ["mol"]
+    app_config["OAREPO_PREVIEWER_MOL_MAX_FILE_SIZE_BYTES"] = 200 * 1024 * 1024
+    return app_config
+
+
+@pytest.fixture(scope="module")
+def base_app(base_app):
+    """Ensure previewer extensions are loaded."""
+    from invenio_previewer.ext import InvenioPreviewer
     from oarepo_previewer.ext import OARepoPreviewerExt
 
-    app = Flask(__name__)
-    OARepoPreviewerExt(app)
-    with app.app_context():
-        yield app
+    if "invenio-previewer" not in base_app.extensions:
+        InvenioPreviewer(base_app)
+    if "oarepo-previewer" not in base_app.extensions:
+        OARepoPreviewerExt(base_app)
 
-
-class MockPreviewFile:
-    """Duck-typed stand-in for invenio_previewer.api.PreviewFile."""
-
-    def __init__(
-        self,
-        filename: str,
-        content: bytes,
-        size: int | None = None,
-        local: bool = True,
-    ) -> None:
-        """Initialize mock with filename, content, size and locality flag."""
-        self._filename = filename
-        self._content = content
-        self.size = size if size is not None else len(content)
-        self._local = local
-
-    @property
-    def filename(self) -> str:
-        """Get filename."""
-        return self._filename
-
-    def is_local(self) -> bool:
-        """Check if file is local."""
-        return self._local
-
-    def has_extensions(self, *exts: str) -> bool:
-        """Check if file has one of the extensions."""
-        return Path(self._filename).suffix.lower() in exts
-
-    def open(self) -> BinaryIO:
-        """Open the file for reading."""
-        return io.BytesIO(self._content)
-
-
-@pytest.fixture
-def previewer_app(app):
-    """App with a stubbed invenio-previewer state on the extensions registry."""
-    app.extensions["invenio-previewer"] = SimpleNamespace(js_bundles=[], css_bundles=[])
-    return app
+    return base_app

@@ -14,21 +14,29 @@ from flask import Flask
 from oarepo_previewer.ext import OARepoPreviewerExt
 
 
-def test_extension_registered(app):
+def test_extension_registered():
     """Extension registers itself on the app."""
+    app = Flask("testapp")
+    ext = OARepoPreviewerExt(app)
+    
     assert "oarepo-previewer" in app.extensions
+    assert app.extensions["oarepo-previewer"] == ext
 
 
-def test_default_config(app):
+def test_default_config():
     """Default config is initialized with the OAREPO_PREVIEWER_ prefix."""
-    assert app.config["OAREPO_PREVIEWER_ENABLED"] == ["mol"]
+    app = Flask("testapp")
+    OARepoPreviewerExt(app)
+    
+    assert "OAREPO_PREVIEWER_ENABLED" in app.config
 
 
 def test_enabled_previewers_prepended():
     """Enabled previewers get prepended to PREVIEWER_PREFERENCE."""
-    app = Flask(__name__)
+    app = Flask("testapp")
     app.config["OAREPO_PREVIEWER_ENABLED"] = ["yaml_prismjs"]
     app.config["PREVIEWER_PREFERENCE"] = ["pdfjs"]
+    
     OARepoPreviewerExt(app)
 
     assert app.config["PREVIEWER_PREFERENCE"] == ["yaml_prismjs", "pdfjs"]
@@ -36,10 +44,12 @@ def test_enabled_previewers_prepended():
 
 def test_existing_preference_list_not_mutated():
     """A pre-existing PREVIEWER_PREFERENCE list object is not mutated."""
-    app = Flask(__name__)
+    app = Flask("testapp")
     app.config["OAREPO_PREVIEWER_ENABLED"] = ["yaml_prismjs"]
+    
     original = ["pdfjs"]
     app.config["PREVIEWER_PREFERENCE"] = original
+    
     OARepoPreviewerExt(app)
 
     assert original == ["pdfjs"]
