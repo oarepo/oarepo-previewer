@@ -36,7 +36,7 @@ theme = WebpackThemeBundle(
             "devDependencies": {},
             "aliases": {
                 "@translations/oarepo_previewer/i18next": "./translations/oarepo_previewer/i18next.js",
-                },
+            },
         }
     },
 )

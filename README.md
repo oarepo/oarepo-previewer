@@ -51,10 +51,9 @@ manually.
 
 ### Content Security Policy (Molstar)
 
-Molstar may issue `fetch` calls to external databases when a previewed file (e.g. an `.mvsj`/`.mvsx` MolViewSpec description) contains URLs pointing to remote resources. If your app sets `APP_DEFAULT_SECURE_HEADERS`, the default Content Security Policy will
-block these requests, so the policy needs to be relaxed for the molecular viewer to work.
+Molstar may issue `fetch` calls to external databases when a previewed file (e.g. an `.mvsj`/`.mvsx` MolViewSpec description) contains URLs pointing to remote resources. If your app sets `APP_DEFAULT_SECURE_HEADERS`, the default Content Security Policy will block these requests, so the policy needs to be relaxed for the molecular viewer to work.
 
-Recommended `invenio.cfg` settings:
+`invenio.cfg` settings could be for instance:
 
 ```python
 # invenio.cfg
@@ -78,20 +77,20 @@ APP_DEFAULT_SECURE_HEADERS = {
         "connect-src": [
             "'self'",
             "http://127.0.0.1:9000",  # Development S3 server
-            "https://*.rcsb.org",     # RCSB PDB (Protein Data Bank)
-            "https://*.ebi.ac.uk",    # EBI (European Bioinformatics Institute)
-            "https://*.pdbj.org",     # PDBj (Protein Data Bank Japan)
+            "https://*.rcsb.org",  # RCSB PDB (Protein Data Bank)
+            "https://*.ebi.ac.uk",  # EBI (European Bioinformatics Institute)
+            "https://*.pdbj.org",  # PDBj (Protein Data Bank Japan)
             "https://modelarchive.org",  # ModelArchive
-            "https://*.expasy.org",   # ExPASy
+            "https://*.expasy.org",  # ExPASy
             "https://pubchem.ncbi.nlm.nih.gov",  # PubChem
         ],
     }
 }
 ```
 
-The `connect-src` database entries are only needed if previewed files
+The `connect-src` database entries are actually only needed if previewed files
 reference remote resources — Molstar fetches them from the databases above.
-If your records never contain such references, you can omit them. Keep the
+If your records never contain such references, you can omit them (or add more if needed). Keep the
 development S3 entries (`127.0.0.1:9000`) out of production deployments
 and replace them with your actual file storage origin.
 
