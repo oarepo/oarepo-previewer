@@ -20,21 +20,21 @@ invenio-previewer's `PREVIEWER_PREFERENCE`.
 
 A unified molecular structure previewer powered by **Molstar**, supporting a wide range of molecular and crystallographic file formats:
 
-| Extension | Format |
-|-----------|--------|
-| `.mvsj` | MolViewSpec JSON description |
-| `.mvsx` | MolViewSpec ZIP container |
-| `.pdb` | Protein Data Bank |
-| `.ent` | PDB legacy format |
-| `.cif` | Crystallographic Information File |
-| `.bcif` | Binary CIF (compressed) |
-| `.mcif` | Magnetic CIF |
-| `.mmcif` | Macro-molecular CIF |
-| `.mol` / `.sdf` / `.sd` | MDL Molfile |
-| `.mol2` | Tripos Mol2 |
-| `.gro` | GROMACS structure |
-| `.xyz` | XYZ coordinate format |
-| `.pdbqt` | PDBQT (AutoDock) |
+| Extension               | Format                            |
+| ----------------------- | --------------------------------- |
+| `.mvsj`                 | MolViewSpec JSON description      |
+| `.mvsx`                 | MolViewSpec ZIP container         |
+| `.pdb`                  | Protein Data Bank                 |
+| `.ent`                  | PDB legacy format                 |
+| `.cif`                  | Crystallographic Information File |
+| `.bcif`                 | Binary CIF (compressed)           |
+| `.mcif`                 | Magnetic CIF                      |
+| `.mmcif`                | Macro-molecular CIF               |
+| `.mol` / `.sdf` / `.sd` | MDL Molfile                       |
+| `.mol2`                 | Tripos Mol2                       |
+| `.gro`                  | GROMACS structure                 |
+| `.xyz`                  | XYZ coordinate format             |
+| `.pdbqt`                | PDBQT (AutoDock)                  |
 
 The previewer leverages Molstar's native support for these formats, providing 3D visualization directly in the browser. Configuration is handled via the template which loads Molstar and initializes the viewer with the file URI.
 
@@ -48,6 +48,52 @@ OAREPO_PREVIEWER_MOL_MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024
 
 Set `OAREPO_PREVIEWER_ENABLED = []` to manage `PREVIEWER_PREFERENCE`
 manually.
+
+### Content Security Policy (Molstar)
+
+Molstar may issue `fetch` calls to external databases when a previewed file (e.g. an `.mvsj`/`.mvsx` MolViewSpec description) contains URLs pointing to remote resources. If your app sets `APP_DEFAULT_SECURE_HEADERS`, the default Content Security Policy will
+block these requests, so the policy needs to be relaxed for the molecular viewer to work.
+
+Recommended `invenio.cfg` settings:
+
+```python
+# invenio.cfg
+APP_DEFAULT_SECURE_HEADERS = {
+    "content_security_policy": {
+        "default-src": [
+            "'self'",
+            "fonts.googleapis.com",
+            "*.gstatic.com",
+            "data:",
+            "'unsafe-inline'",
+            "blob:",
+            "http://127.0.0.1:9000/",  # Development S3 server
+            "https://licensebuttons.net/",
+        ],
+        "script-src": [
+            "'self'",
+            "blob:",
+            "'wasm-unsafe-eval'",
+        ],
+        "connect-src": [
+            "'self'",
+            "http://127.0.0.1:9000",  # Development S3 server
+            "https://*.rcsb.org",     # RCSB PDB (Protein Data Bank)
+            "https://*.ebi.ac.uk",    # EBI (European Bioinformatics Institute)
+            "https://*.pdbj.org",     # PDBj (Protein Data Bank Japan)
+            "https://modelarchive.org",  # ModelArchive
+            "https://*.expasy.org",   # ExPASy
+            "https://pubchem.ncbi.nlm.nih.gov",  # PubChem
+        ],
+    }
+}
+```
+
+The `connect-src` database entries are only needed if previewed files
+reference remote resources — Molstar fetches them from the databases above.
+If your records never contain such references, you can omit them. Keep the
+development S3 entries (`127.0.0.1:9000`) out of production deployments
+and replace them with your actual file storage origin.
 
 ## Adding a contrib previewer
 
