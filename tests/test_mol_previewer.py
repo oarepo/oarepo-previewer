@@ -7,57 +7,120 @@
 #
 """Tests for the Molstar previewer."""
 
-from __future__ import annotations
-
-from pathlib import Path
-
 import pytest
-from jinja2 import ChoiceLoader, DictLoader, FileSystemLoader
-
+from unittest.mock import Mock
 from oarepo_previewer.previewers import mol
 
-from .conftest import MockPreviewFile
 
-MVSJ = b"""{
-  "kind": "single",
-  "root": {
-    "kind": "download",
-    "url": "https://example.org/files/1crn.bcif"
-  },
-  "metadata": {"version": "1.5.0", "timestamp": "2026-01-01T00:00:00Z"}
-}
-"""
+@pytest.mark.parametrize(
+    "ext",
+    [
+        "mvsj",
+        "mvsx",
+        "pdb",
+        "ent",
+        "pdbqt",
+        "cif",
+        "bcif",
+        "mcif",
+        "mmcif",
+        "mol",
+        "mol2",
+        "gro",
+        "sdf",
+        "sd",
+        "xyz",
+    ],
+)
+def test_extension_can_preview(app, ext):
+    mock_file = Mock()
 
-
-@pytest.fixture
-def render_app(previewer_app):
-    """App able to render our package templates with a stubbed abstract one."""
-    previewer_app.config["PREVIEWER_ABSTRACT_TEMPLATE"] = "invenio_previewer/abstract_previewer.html"
-    templates_dir = Path(mol.__file__).parent.parent / "templates" / "semantic-ui"
-    previewer_app.jinja_loader = ChoiceLoader(
-        [
-            DictLoader({"invenio_previewer/abstract_previewer.html": ("{% block panel %}{% endblock %}")}),
-            FileSystemLoader(str(templates_dir)),
-        ]
+    mock_file.filename = f"1cbs.{ext}"
+    mock_file.size = 1024
+    mock_file.is_local = lambda: True
+    mock_file.has_extensions = lambda *exts: any(
+        mock_file.filename.endswith(e) for e in exts
     )
-    return previewer_app
+
+    with app.app_context():
+        assert mol.can_preview(mock_file)
 
 
-@pytest.mark.parametrize("filename", ["scene.mvsj", "scene.mvsx", "SCENE.MVSJ"])
-def test_can_preview(app, filename):
-    assert mol.can_preview(MockPreviewFile(filename, MVSJ))
+def test_cannot_preview_nonlocal_file(app):
+    mock_file = Mock()
+    mock_file.filename = "1cbs.mvsj"
+    mock_file.size = 1024
+    mock_file.is_local = lambda: False
+    mock_file.has_extensions = lambda *exts: any(
+        mock_file.filename.endswith(e) for e in exts
+    )
+
+    with app.app_context():
+        assert not mol.can_preview(mock_file)
+
+
+def test_cannot_preview_oversize_file(app):
+    mock_file = Mock()
+    mock_file.filename = "1cbs.mvsj"
+    mock_file.size = (200 * 1024 * 1024) + 1
+    mock_file.is_local = lambda: True
+    mock_file.has_extensions = lambda *exts: any(
+        mock_file.filename.endswith(e) for e in exts
+    )
+
+    with app.app_context():
+        assert not mol.can_preview(mock_file)
+
+
+def test_can_preview_maxsize_file(app):
+    mock_file = Mock()
+    mock_file.filename = "1cbs.mvsj"
+    mock_file.size = 200 * 1024 * 1024
+    mock_file.is_local = lambda: True
+    mock_file.has_extensions = lambda *exts: any(
+        mock_file.filename.endswith(e) for e in exts
+    )
+
+    with app.app_context():
+        assert mol.can_preview(mock_file)
 
 
 def test_cannot_preview_other_extensions(app):
-    assert not mol.can_preview(MockPreviewFile("scene.json", MVSJ))
-    assert not mol.can_preview(MockPreviewFile("mvsj", MVSJ))
+    mock_file = Mock()
+    mock_file.filename = "document.pdf"
+    mock_file.size = 1024
+    mock_file.is_local = lambda: True
+    mock_file.has_extensions = lambda *exts: any(
+        mock_file.filename.endswith(e) for e in exts
+    )
+
+    with app.app_context():
+        assert not mol.can_preview(mock_file)
 
 
-def test_cannot_preview_non_local(app):
-    assert not mol.can_preview(MockPreviewFile("scene.mvsj", MVSJ, local=False))
+def test_cannot_preview_other_extensions(app):
+    mock_file = Mock()
+    mock_file.filename = "document.jpg"
+    mock_file.size = 1024
+    mock_file.is_local = lambda: True
+    mock_file.has_extensions = lambda *exts: any(
+        mock_file.filename.endswith(e) for e in exts
+    )
+
+    with app.app_context():
+        assert not mol.can_preview(mock_file)
 
 
-def test_preview_renders_mvsj_data(render_app):
-    html = mol.preview(MockPreviewFile("scene.mvsj", MVSJ))
+def test_mvsj_preview_render(app):
+    mock_file = Mock()
+    mock_file.filename = "1cbs.mvsj"
+    mock_file.size = 1024
 
-    assert 'id="molstar-viewer"' in html
+    mock_file.file = Mock()
+    mock_file.file.uri = "records/48egnewg5q/1cbs.mvsj"
+
+    with app.test_request_context():
+        html = mol.preview(mock_file)
+
+        assert "molstar_previewer.js" in html
+        assert "Preview" in html
