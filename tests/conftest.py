@@ -16,8 +16,8 @@ pytest_plugins = [
 
 @pytest.fixture(scope="module")
 def create_app(instance_path, entry_points):
-    """
-    Spins up a combined UI/API app instead of just API.
+    """Spins up a combined UI/API app instead of just API.
+
     This ensures flask-webpackext context processors are loaded for Jinja.
     """
     return invenio_create_app
@@ -34,6 +34,7 @@ def app_config(app_config):
 def base_app(base_app):
     """Ensure previewer extensions are loaded."""
     from invenio_previewer.ext import InvenioPreviewer
+
     from oarepo_previewer.ext import OARepoPreviewerExt
 
     if "invenio-previewer" not in base_app.extensions:
