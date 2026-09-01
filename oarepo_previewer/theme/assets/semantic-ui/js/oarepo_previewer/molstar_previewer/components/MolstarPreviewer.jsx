@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import { i18next } from "@translations/invenio_app_rdm/i18next"; // TODO: change to invenio_previewer when it will be available for FE.
+import { i18next } from "@translations/oarepo_previewer/i18next";
 import { PluginContext } from "molstar/lib/mol-plugin/context";
 import { PluginSpec, DefaultPluginSpec } from "molstar/lib/mol-plugin/spec";
 import { MolViewSpec } from "molstar/lib/extensions/mvs/behavior";
