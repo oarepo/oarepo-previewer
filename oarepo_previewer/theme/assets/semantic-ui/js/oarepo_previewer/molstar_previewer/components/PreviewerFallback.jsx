@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Container, Grid, GridColumn, Icon } from "semantic-ui-react";
-import { i18next } from "@translations/invenio_app_rdm/i18next"; // TODO: change to invenio_previewer when it will be available for FE.
+import { i18next } from "@translations/oarepo_previewer/i18next";
 
 /**
  * PreviewerFallback is a React component mirroring the `default.html` template in `invenio_previewer`.
