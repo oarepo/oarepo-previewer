@@ -98,13 +98,26 @@ export const MolstarPreviewer = ({ uri }) => {
 
   const [error, setError] = useState(null);
 
+  const cleanUpFunction = (pluginRef) => {
+    if (pluginRef.current) {
+      try {
+        pluginRef.current.dispose();
+      } catch (disposeErr) {
+        console.warn("Mol* dispose failed: <", disposeErr, ">!");
+      }
+      pluginRef.current = null;
+    }
+  };
+
   // On mount, initialize the Mol* plugin (see `pluginRef`) and load the molecular data from the provided URI.
   useEffect(() => {
     let isMounted = true;
 
     const init = async () => {
       if (!uri) {
-        setError(i18next.t("A valid file URI is required to initialize the Mol*!"));
+        setError(
+          i18next.t("A valid file URI is required to initialize the Mol*!"),
+        );
         return;
       }
 
@@ -144,6 +157,10 @@ export const MolstarPreviewer = ({ uri }) => {
         const format = MolstarFormats.getMolstarFormat(extension);
         const isBinary = MolstarFormats.isBinaryFormat(extension);
 
+        if (!isMounted) {
+          return;
+        }
+
         if (MolstarFormats.isStructureFormat(extension)) {
           await loadStructureFromUrl(plugin, uri, format, isBinary);
         } else if (MolstarFormats.isMVSFormat(extension)) {
@@ -152,16 +169,12 @@ export const MolstarPreviewer = ({ uri }) => {
           setError(`${i18next.t("Unsupported file format")}: <${extension}>!`);
         }
       } catch (err) {
-        setError(`${i18next.t("Error while loading file")}: <${err}>!`);
-
-        if (pluginRef.current) {
-          try {
-            pluginRef.current.dispose();
-          } catch (disposeErr) {
-            console.warn("Mol* dispose failed: <", disposeErr, ">!");
-          }
-          pluginRef.current = null;
+         if (!isMounted) {
+          return;
         }
+        
+        setError(`${i18next.t("Error while loading file")}: <${err}>!`);
+        cleanUpFunction(pluginRef);
       }
     };
 
@@ -169,9 +182,7 @@ export const MolstarPreviewer = ({ uri }) => {
 
     return () => {
       isMounted = false;
-      if (pluginRef.current) {
-        pluginRef.current.dispose();
-      }
+      cleanUpFunction(pluginRef);
     };
   }, [uri]);
 
