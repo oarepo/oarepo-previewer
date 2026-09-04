@@ -8,6 +8,10 @@
 
 {%- extends config.PREVIEWER_ABSTRACT_TEMPLATE %}
 
+{%- block html_tags %}
+  lang="{{ current_i18n.locale.language|safe }}" dir="{{ current_i18n.locale.text_direction }}" {{ html_tags|safe }}
+{%- endblock %}
+
 {% block panel %}
   <div id="oarepo-molstar-previewer">
     <div id="molstar-viewer" data-file-uri={{ file_uri }} style="height: 400px; width: 100%; position: relative;">{{ _("Loading the viewer…") }}
