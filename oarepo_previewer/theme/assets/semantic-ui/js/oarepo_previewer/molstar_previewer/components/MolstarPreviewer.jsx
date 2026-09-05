@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { Item, Message } from "semantic-ui-react";
 import { i18next } from "@translations/oarepo_previewer/i18next";
 import { PluginContext } from "molstar/lib/mol-plugin/context";
 import { PluginSpec, DefaultPluginSpec } from "molstar/lib/mol-plugin/spec";
@@ -88,6 +89,21 @@ const getExtension = (uri) => {
 };
 
 /**
+ * Splits the HTML string by any variation of `br` tags (including Molstar's malformed </br>),
+ * strips remaining HTML from each segment, and returns an array of plain text lines.
+ */
+const stripHtmlToLines = (htmlString) => {
+  if (!htmlString) return [];
+
+  const segments = htmlString.split(/<\/?br\s*\/?>/gi);
+
+  return segments.map((segment) => {
+    const doc = new DOMParser().parseFromString(segment, "text/html");
+    return doc.body.textContent || "";
+  });
+};
+
+/**
  * Creates a React component that initializes and renders the Mol* viewer for molecular visualization.
  * Creates the Mol* plugin without React UI not to use any dependencies of React 18, see https://molstar.org/docs/plugin/instance/#plugincontext-without-built-in-react-ui.
  */
@@ -95,10 +111,16 @@ export const MolstarPreviewer = ({ uri }) => {
   const viewerRef = useRef(null);
   const canvasRef = useRef(null);
   const pluginRef = useRef(null);
+  const highLightSubscriptionRef = useRef(null);
 
   const [error, setError] = useState(null);
+  const [tooltipLabels, setTooltipLabels] = useState([]);
 
   const cleanUpFunction = (pluginRef) => {
+    if (highLightSubscriptionRef.current) {
+      highLightSubscriptionRef.current.unsubscribe();
+      highLightSubscriptionRef.current = null;
+    }
     if (pluginRef.current) {
       try {
         pluginRef.current.dispose();
@@ -141,6 +163,23 @@ export const MolstarPreviewer = ({ uri }) => {
           return;
         }
 
+        highLightSubscriptionRef.current =
+          plugin.behaviors.labels.highlight.subscribe((e) => {
+            if (!isMounted) {
+              return;
+            }
+            if (
+              e &&
+              e.labels &&
+              e.labels.length > 0 &&
+              !e.labels[0].startsWith("Unknown Entity")
+            ) {
+              setTooltipLabels([...e.labels]);
+            } else {
+              setTooltipLabels([]);
+            }
+          });
+
         if (
           !(await plugin.initViewerAsync(canvasRef.current, viewerRef.current))
         ) {
@@ -169,10 +208,10 @@ export const MolstarPreviewer = ({ uri }) => {
           setError(`${i18next.t("Unsupported file format")}: <${extension}>!`);
         }
       } catch (err) {
-         if (!isMounted) {
+        if (!isMounted) {
           return;
         }
-        
+
         setError(`${i18next.t("Error while loading file")}: <${err}>!`);
         cleanUpFunction(pluginRef);
       }
@@ -200,6 +239,30 @@ export const MolstarPreviewer = ({ uri }) => {
         ref={canvasRef}
         style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
       />
+
+      {tooltipLabels.length > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "15px",
+            right: "15px",
+          }}
+        >
+          <Message floating size="tiny">
+            <Item.Group divided>
+              {tooltipLabels.map((label, labelIndex) => (
+                <Item key={labelIndex}>
+                  <Item.Content>
+                    {stripHtmlToLines(label).map((line, lineIndex) => (
+                      <div key={lineIndex}>{line}</div>
+                    ))}
+                  </Item.Content>
+                </Item>
+              ))}
+            </Item.Group>
+          </Message>
+        </div>
+      )}
     </div>
   );
 };
