@@ -1,0 +1,25 @@
+{#
+  Copyright (C) 2026 CESNET z.s.p.o.
+
+  oarepo-previewer is free software; you can redistribute it and/or
+  modify it under the terms of the MIT License; see LICENSE file for more
+  details.
+#}
+
+{%- extends config.PREVIEWER_ABSTRACT_TEMPLATE %}
+
+{%- block html_tags %}
+  lang="{{ current_i18n.locale.language|safe }}" dir="{{ current_i18n.locale.text_direction }}" {{ html_tags|safe }}
+{%- endblock %}
+
+{% block panel %}
+  <div id="oarepo-molstar-previewer">
+    <div id="molstar-viewer" data-file-uri={{ file_uri }} style="height: 400px; width: 100%; position: relative;">{{ _("Loading the viewer…") }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  {{ super() }}
+  {{ webpack['molstar_previewer.js'] }}
+{% endblock javascript %}

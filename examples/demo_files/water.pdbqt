@@ -1,0 +1,9 @@
+REMARK  Name = water
+REMARK  1 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+ROOT
+ATOM      1  O   WAT A   1       0.000   0.000   0.000 -0.834 OA
+ATOM      2  H1  WAT A   1       0.759   0.000   0.504  0.417 HD
+ATOM      3  H2  WAT A   1       0.260   0.000  -0.873  0.417 HD
+ENDROOT
+TORSDOF 0

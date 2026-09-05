@@ -1,0 +1,10 @@
+i18n:
+  languages:
+    - en
+    - cs
+  babel_source_paths:
+    - oarepo_previewer
+  babel_output_translations: oarepo_previewer/translations
+  i18next_source_paths:
+    - oarepo_previewer/theme/assets/semantic-ui/js/oarepo_previewer
+  i18next_output_translations: oarepo_previewer/theme/assets/semantic-ui/translations/oarepo_previewer

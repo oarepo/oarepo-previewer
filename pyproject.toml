@@ -5,7 +5,7 @@ description = "OARepo contrib previewers for invenio-previewer (custom file exte
 readme = "README.md"
 requires-python = ">=3.13,<3.15"
 dependencies = [
-    "invenio-previewer>=3.5.1,<4.0.0",
+    "invenio-previewer>=5.0.0,<6.0.0",
 ]
 
 [project.urls]
@@ -17,6 +17,7 @@ dev = [
 ]
 tests = [
     "pytest>=7.1.2",
+    "pytest_oarepo>=6.0.0",
 ]
 oarepo14 = [
     "oarepo[rdm,tests]>=14.0.0,<15.0.0",
@@ -26,7 +27,13 @@ oarepo14 = [
 oarepo_previewer = "oarepo_previewer.ext:OARepoPreviewerExt"
 
 [project.entry-points."invenio_previewer.previewers"]
-mvs = "oarepo_previewer.previewers.mvs"
+mol = "oarepo_previewer.previewers.mol"
+
+[project.entry-points."invenio_assets.webpack"]
+oarepo_previewer_theme = "oarepo_previewer.theme.webpack:theme"
+
+[project.entry-points."invenio_i18n.translations"]
+oarepo_previewer_messages = "oarepo_previewer"
 
 [tool.hatch.build.targets.sdist]
 include = [
