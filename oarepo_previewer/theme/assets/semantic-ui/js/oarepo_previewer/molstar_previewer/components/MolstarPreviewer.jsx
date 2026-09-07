@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import sanitizeHtml from "sanitize-html";
 import { Item, Message } from "semantic-ui-react";
 import { i18next } from "@translations/oarepo_previewer/i18next";
 import { PluginContext } from "molstar/lib/mol-plugin/context";
@@ -89,21 +90,6 @@ const getExtension = (uri) => {
 };
 
 /**
- * Splits the HTML string by any variation of `br` tags (including Molstar's malformed </br>),
- * strips remaining HTML from each segment, and returns an array of plain text lines.
- */
-const stripHtmlToLines = (htmlString) => {
-  if (!htmlString) return [];
-
-  const segments = htmlString.split(/<\/?br\s*\/?>/gi);
-
-  return segments.map((segment) => {
-    const doc = new DOMParser().parseFromString(segment, "text/html");
-    return doc.body.textContent || "";
-  });
-};
-
-/**
  * Creates a React component that initializes and renders the Mol* viewer for molecular visualization.
  * Creates the Mol* plugin without React UI not to use any dependencies of React 18, see https://molstar.org/docs/plugin/instance/#plugincontext-without-built-in-react-ui.
  */
@@ -115,6 +101,13 @@ export const MolstarPreviewer = ({ uri }) => {
 
   const [error, setError] = useState(null);
   const [tooltipLabels, setTooltipLabels] = useState([]);
+
+  // Sanitize HTML options to allow only specific tags and attributes for tooltip labels.
+  // Subset of allowed tags (only added tag is `small`) and attributes is based on the https://github.com/inveniosoftware/invenio-config/blob/2f4086ce203827dd0564a254eb5a4a7cac713132/invenio_config/default.py.
+  const sanitizeOpts = {
+    allowedTags: ["b", "i", "em", "strong", "br", "small"],
+    allowedAttributes: {},
+  };
 
   const cleanUpFunction = (pluginRef) => {
     if (highLightSubscriptionRef.current) {
@@ -253,9 +246,11 @@ export const MolstarPreviewer = ({ uri }) => {
               {tooltipLabels.map((label, labelIndex) => (
                 <Item key={labelIndex}>
                   <Item.Content>
-                    {stripHtmlToLines(label).map((line, lineIndex) => (
-                      <div key={lineIndex}>{line}</div>
-                    ))}
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeHtml(label, sanitizeOpts),
+                      }}
+                    />
                   </Item.Content>
                 </Item>
               ))}
