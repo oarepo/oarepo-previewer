@@ -57,7 +57,7 @@ def preview(file: PreviewFile) -> str:
     return str(
         render_template(
             "oarepo_previewer/molstar_previewer.html",
-            file_uri=file.uri,
+            file=file,
             js_bundles=current_previewer.js_bundles,
             css_bundles=current_previewer.css_bundles,
         )
