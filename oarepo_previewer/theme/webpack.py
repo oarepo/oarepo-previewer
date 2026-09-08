@@ -32,6 +32,7 @@ theme = WebpackThemeBundle(
             },
             "dependencies": {
                 "molstar": "^5.11.0",
+                "sanitize-html": "2.13.0",
             },
             "devDependencies": {},
             "aliases": {
